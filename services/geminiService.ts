@@ -2,13 +2,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { MissionData } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 export const generateMission = async (): Promise<MissionData> => {
   try {
+    // Initialize inside the function to ensure we use the latest environment state
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
-      contents: "Generate a cyberpunk shooter mission briefing. Make it sound cool and tech-heavy.",
+      contents: "Generate a cyberpunk shooter mission briefing. Make it sound cool, gritty, and tech-heavy.",
       config: {
         responseMimeType: "application/json",
         responseSchema: {

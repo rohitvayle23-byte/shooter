@@ -1,7 +1,7 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { PointerLockControls, Vector3 } from '@react-three/drei';
+import { PointerLockControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface PlayerProps {
@@ -96,8 +96,7 @@ export const Player: React.FC<PlayerProps> = ({ onShoot }) => {
     <>
       <PointerLockControls />
       <mesh position={[0, -1.5, -2]} rotation={[0, 0, 0]}>
-        {/* Simple Gun Visual Attached to Camera via Grouping if we were using nested components, 
-            but for simplicity we use HUD and screen effects */}
+        {/* We can add a gun model here later */}
       </mesh>
     </>
   );

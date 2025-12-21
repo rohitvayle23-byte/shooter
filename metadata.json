@@ -1,0 +1,5 @@
+{
+  "name": "Neon Strike: Gemini Arena",
+  "description": "A high-octane 3D first-person shooter built with Three.js and React, featuring dynamic mission briefings powered by Gemini AI.",
+  "requestFramePermissions": []
+}

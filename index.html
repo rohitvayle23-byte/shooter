@@ -18,25 +18,49 @@
       .font-orbitron {
         font-family: 'Orbitron', sans-serif;
       }
+      #error-display {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #900;
+        color: white;
+        padding: 20px;
+        z-index: 9999;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
     </style>
-  <script type="importmap">
+    <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "three": "https://esm.sh/three@0.170.0",
+    "@react-three/fiber": "https://esm.sh/@react-three/fiber@9.0.0-alpha.8?deps=react@19.0.0,react-dom@19.0.0,three@0.170.0",
+    "@react-three/drei": "https://esm.sh/@react-three/drei@10.0.0-beta.4?deps=react@19.0.0,react-dom@19.0.0,three@0.170.0,@react-three/fiber@9.0.0-alpha.8",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
+    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
-    "@react-three/drei": "https://esm.sh/@react-three/drei@^10.7.7",
-    "@react-three/fiber": "https://esm.sh/@react-three/fiber@^9.4.2",
-    "three": "https://esm.sh/three@^0.182.0"
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
-</head>
+    <script>
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        const display = document.getElementById('error-display');
+        display.style.display = 'block';
+        display.textContent += `\nError: ${msg}\nAt: ${url}:${lineNo}:${columnNo}\n`;
+        return false;
+      };
+    </script>
+  </head>
   <body>
     <div id="root"></div>
-    <!-- THIS IS THE FIX FOR THE BLACK SCREEN -->
+    <div id="error-display">Critical Boot Error Detected:</div>
     <script type="module" src="index.tsx"></script>
   </body>
 </html>

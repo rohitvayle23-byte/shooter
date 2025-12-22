@@ -1,10 +1,10 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { MissionData } from "../types.ts";
+import { MissionData } from "../types";
 
 export const generateMission = async (): Promise<MissionData> => {
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
     
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -27,14 +27,14 @@ export const generateMission = async (): Promise<MissionData> => {
       },
     });
 
-    const data = JSON.parse(response.text);
+    const data = JSON.parse(response.text || '{}');
     return data;
   } catch (error) {
     console.error("Failed to generate mission:", error);
     return {
       title: "Operation: Dark Grid",
-      description: "Neural link established. Eliminate rogue data nodes in the neon sector.",
-      objective: "Survive as long as possible against the automated defense drones.",
+      description: "Neural link established.",
+      objective: "Survive the automated defense drones.",
       difficulty: "Hard"
     };
   }

@@ -46,6 +46,7 @@ export const Player: React.FC<PlayerProps> = ({ onShoot, onUpdatePosition }) => 
     };
 
     const onMouseDown = () => {
+      // Only shoot if the game is focused and pointer is locked
       if (!document.pointerLockElement) return;
       const dir = new THREE.Vector3();
       camera.getWorldDirection(dir);
@@ -64,45 +65,48 @@ export const Player: React.FC<PlayerProps> = ({ onShoot, onUpdatePosition }) => 
   }, [camera, onShoot]);
 
   useFrame((state, delta) => {
-    velocity.current.x -= velocity.current.x * 10.0 * delta;
-    velocity.current.z -= velocity.current.z * 10.0 * delta;
+    // Clamp delta to prevent massive jumps on lag
+    const dt = Math.min(delta, 0.1);
+
+    velocity.current.x -= velocity.current.x * 10.0 * dt;
+    velocity.current.z -= velocity.current.z * 10.0 * dt;
 
     direction.current.z = Number(moveForward) - Number(moveBackward);
     direction.current.x = Number(moveRight) - Number(moveLeft);
     direction.current.normalize();
 
-    if (moveForward || moveBackward) velocity.current.z -= direction.current.z * 400.0 * delta;
-    if (moveLeft || moveRight) velocity.current.x -= direction.current.x * 400.0 * delta;
+    if (moveForward || moveBackward) velocity.current.z -= direction.current.z * 400.0 * dt;
+    if (moveLeft || moveRight) velocity.current.x -= direction.current.x * 400.0 * dt;
 
     const moveVector = new THREE.Vector3();
     const rightVector = new THREE.Vector3();
     
-    // Get camera's forward vector projected onto XZ plane
     camera.getWorldDirection(moveVector);
     moveVector.y = 0;
     moveVector.normalize();
     
-    // Get camera's right vector
     rightVector.crossVectors(moveVector, camera.up);
 
-    camera.position.addScaledVector(moveVector, -velocity.current.z * delta * 0.1);
-    camera.position.addScaledVector(rightVector, velocity.current.x * delta * 0.1);
+    camera.position.addScaledVector(moveVector, -velocity.current.z * dt * 0.1);
+    camera.position.addScaledVector(rightVector, velocity.current.x * dt * 0.1);
 
-    // Keep within bounds
     camera.position.x = Math.max(-45, Math.min(45, camera.position.x));
     camera.position.z = Math.max(-45, Math.min(45, camera.position.z));
-    camera.position.y = 2.5; // Fixed head height
+    camera.position.y = 2.5;
 
-    // Inform parent of position update
     onUpdatePosition(camera.position);
   });
 
   return (
     <>
       <PointerLockControls />
-      <mesh position={[0.5, -0.5, -1]} rotation={[0.2, 0, 0]}>
-        <boxGeometry args={[0.1, 0.2, 0.5]} />
-        <meshStandardMaterial color="#333" />
+      <mesh position={[0.5, -0.4, -1]} rotation={[0.1, 0, 0]}>
+        <boxGeometry args={[0.15, 0.25, 0.6]} />
+        <meshStandardMaterial color="#222" metalness={0.9} roughness={0.1} />
+        <mesh position={[0, 0.05, -0.3]}>
+           <boxGeometry args={[0.05, 0.05, 0.1]} />
+           <meshBasicMaterial color="#00ffff" />
+        </mesh>
       </mesh>
     </>
   );

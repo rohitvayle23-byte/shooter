@@ -4,8 +4,8 @@ import { MissionData } from "../types";
 
 export const generateMission = async (): Promise<MissionData> => {
   try {
-    // Initialize inside the function to ensure we use the latest environment state
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+    // Correctly initialize with a named parameter using the environment variable directly.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
@@ -28,6 +28,7 @@ export const generateMission = async (): Promise<MissionData> => {
       },
     });
 
+    // Access the text property directly from the response.
     const data = JSON.parse(response.text);
     return data;
   } catch (error) {

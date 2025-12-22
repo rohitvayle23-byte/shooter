@@ -6,9 +6,10 @@ import * as THREE from 'three';
 
 interface PlayerProps {
   onShoot: (position: THREE.Vector3, direction: THREE.Vector3) => void;
+  onUpdatePosition: (position: THREE.Vector3) => void;
 }
 
-export const Player: React.FC<PlayerProps> = ({ onShoot }) => {
+export const Player: React.FC<PlayerProps> = ({ onShoot, onUpdatePosition }) => {
   const { camera } = useThree();
   const velocity = useRef(new THREE.Vector3());
   const direction = useRef(new THREE.Vector3());
@@ -45,6 +46,7 @@ export const Player: React.FC<PlayerProps> = ({ onShoot }) => {
     };
 
     const onMouseDown = () => {
+      if (!document.pointerLockElement) return;
       const dir = new THREE.Vector3();
       camera.getWorldDirection(dir);
       onShoot(camera.position.clone(), dir);
@@ -90,13 +92,17 @@ export const Player: React.FC<PlayerProps> = ({ onShoot }) => {
     camera.position.x = Math.max(-45, Math.min(45, camera.position.x));
     camera.position.z = Math.max(-45, Math.min(45, camera.position.z));
     camera.position.y = 2.5; // Fixed head height
+
+    // Inform parent of position update
+    onUpdatePosition(camera.position);
   });
 
   return (
     <>
       <PointerLockControls />
-      <mesh position={[0, -1.5, -2]} rotation={[0, 0, 0]}>
-        {/* We can add a gun model here later */}
+      <mesh position={[0.5, -0.5, -1]} rotation={[0.2, 0, 0]}>
+        <boxGeometry args={[0.1, 0.2, 0.5]} />
+        <meshStandardMaterial color="#333" />
       </mesh>
     </>
   );
